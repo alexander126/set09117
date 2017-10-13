@@ -34,6 +34,7 @@ public class Board extends Graphics{
             System.arraycopy(board[i], 0, this.cellP[i], 0, columns);
         }
     }
+//
     public void placeAMove(int r1,int r2,int c1,int c2){
 
         this.cellP[r1][c1] = CellProperty.empty;
