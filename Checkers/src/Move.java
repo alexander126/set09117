@@ -1,35 +1,56 @@
-//
+/*
+ *This software has been created in accordance with
+ *the coursework requirements of the Algorithms and
+ *Data Structures module.
+ *
+ * Description of Move Class: public class providing
+ * funcionallity of the movement of the pieces around
+ * the board
+ *
+ * @author  Aleksandar Kalapsazov
+ * @version 1.0
+ * @date : 13.10.2017
+ *
+ * */
 import java.util.List;
+import java.util.Vector;
 
 public class Move {
-    int firstRow;
-    int firstColumn;
-    int lastRow;
-    int lastColumn;
+    int initialRow;
+    int initialCol;
+    int finalRow;
+    int finalCol;
 
-    Move(int r1, int r2, int c1, int c2){
-        this.firstRow = r1;
-        this.lastRow = r2;
-        this.firstColumn = c1;
-        this.lastColumn = c2;
+    Move(int r1, int c1, int r2, int c2)
+    {
+        this.initialRow = r1;
+        this.initialCol = c1;
+        this.finalRow = r2;
+        this.finalCol = c2;
     }
 
-    public boolean placeAMove(Move move){
-        return (this.firstRow == move.firstRow
-                && this.lastRow == move.lastRow
-                && this.firstColumn == move.firstColumn
-                && this.lastColumn == move.lastColumn) ? true:false;
+    public boolean Equals(Move move)
+    {
+        return (this.initialRow == move.initialRow
+                && this.initialCol == move.initialCol
+                && this.finalRow == move.finalRow
+                && this.finalCol == move.finalCol)?true:false;
     }
 
-    public boolean availableCells(List<Move> moves){
-        for (int i = 0; i<moves.size(); i++){
-            if(this.placeAMove(moves.get(i))){
+    public boolean ExistsInVector(List<Move> moves)
+    {
+        for (int i = 0; i<moves.size(); i++)
+        {
+            if (this.Equals(moves.get(i)))
+            {
                 return true;
             }
         }
         return false;
     }
-    public void display(){
-        System.out.println("("+ this.firstRow + " , " + this.firstColumn + ")" + " (" + this.lastRow + " , " + this.lastColumn + ")");
+
+    public void display()
+    {
+        System.out.print("("+this.initialRow+","+this.initialCol+") -->"+" ("+this.finalRow+", "+this.finalCol+")");
     }
 }

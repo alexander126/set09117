@@ -1,9 +1,8 @@
 public enum CellProperty {
-//
+    invalid,
     empty,
     white,
-    whiteK,
+    whitek,
     black,
-    blackK,
-    invalid
+    blackk
 }

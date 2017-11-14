@@ -1,18 +1,31 @@
-import java.lang.Object;
+/*
+ *This software has been created in accordance with
+ *the coursework requirements of the Algorithms and
+ *Data Structures module.
+ *
+ * Description of Board Class: public class implementing
+ * the appearance and logic behind the game board.
+ *
+ * @author  Aleksandar Kalapsazov
+ * @version 1.0
+ * @date : 13.10.2017
+ *
+ * */
 import java.util.Vector;
-public class Board extends Graphics{
-    int blackPiece;
-    int whitePiece;
 
-    public static final int rows = 8;
-    public static final int columns = 8;
+public class Board extends Graphics {
 
-    CellProperty cellP [][];
+    int blackPieces;
+    int whitePieces;
+    protected AllMoves allmoves;
+    protected Move legalMoves[];
+
+    static final int row = 8;
+    static final int column = 8;
+    CellProperty cellP[][];
 
     Board(){
-
-       this.whitePiece = 12;
-       this.blackPiece = 12;
+        this.blackPieces = this.whitePieces = 12;
 
         this.cellP = new CellProperty[][]{
                 {CellProperty.white, CellProperty.invalid, CellProperty.white, CellProperty.invalid, CellProperty.white, CellProperty.invalid, CellProperty.white, CellProperty.invalid},
@@ -25,98 +38,230 @@ public class Board extends Graphics{
                 {CellProperty.invalid, CellProperty.black, CellProperty.invalid, CellProperty.black, CellProperty.invalid, CellProperty.black, CellProperty.invalid, CellProperty.black}
         };
     }
+
     Board(CellProperty[][] board){
-        this.whitePiece = 12;
-        this.blackPiece = 12;
+        this.blackPieces = this.whitePieces = 12;
 
-        this.cellP = new CellProperty[rows][columns];
-        for(int i = 0;i < rows; i++) {
-            System.arraycopy(board[i], 0, this.cellP[i], 0, columns);
+        this.cellP = new CellProperty[row][column];
+        for(int i = 0; i<row; i++){
+            System.arraycopy(board[i], 0, this.cellP[i], 0, column);
         }
     }
-//
-    public void placeAMove(int r1,int r2,int c1,int c2){
 
-        this.cellP[r1][c1] = CellProperty.empty;
+    public void placeAMove(int r1, int c1, int r2, int c2)
+    {
         this.cellP[r2][c2] = this.cellP[r1][c1];
+        this.cellP[r1][c1] = CellProperty.empty;
 
-        if(this.cellP[r2][c2].equals(CellProperty.white) && r2 == rows-1){
-            this.cellP[r2][c2] = CellProperty.whiteK;
-        }else if(this.cellP[r2][c2].equals(CellProperty.black) && r2 == 0){
-            this.cellP[r2][c2] = CellProperty.blackK;
+
+        if(this.cellP[r2][c2].equals(CellProperty.white) && r2==row-1){
+            this.cellP[r2][c2] = CellProperty.whitek;
+        }
+        else if(this.cellP[r2][c2].equals(CellProperty.black) && r2==0){
+            this.cellP[r2][c2] = CellProperty.blackk;
         }
     }
 
-    public void whitePieceLogic(int r1,int r2,int c1,int c2){
+    public void whitePieceLogic(int r1, int c1, int r2, int c2)
+    {
 
-        assert(Math.abs(r2-r1) == 2 && Math.abs(c2-c1) == 2);
+        assert(Math.abs(r2-r1)==2 && Math.abs(c2-c1)==2);
 
-        MoveDir dir = r2>r1?(c2>c1?MoveDir.right_forward:MoveDir.left_forward)
-                :(c2>c1?MoveDir.right_backward:MoveDir.left_backward);
+
+        MoveDir dir = r2>r1?(c2>c1?MoveDir.forwardRight:MoveDir.forwardLeft)
+                :(c2>c1?MoveDir.backwardRight:MoveDir.backwardLeft);
+
+
         switch(dir){
-            case right_forward:
-                this.cellP[r1+1][c1+1] = CellProperty.empty;
-                break;
-            case right_backward:
-                this.cellP[r1-1][c1+1] = CellProperty.empty;
-                break;
-            case left_forward:
+            case forwardLeft:
                 this.cellP[r1+1][c1-1] = CellProperty.empty;
                 break;
-            case left_backward:
+            case forwardRight:
+                this.cellP[r1+1][c1+1] = CellProperty.empty;
+                break;
+            case backwardLeft:
                 this.cellP[r1-1][c1-1] = CellProperty.empty;
+                break;
+            case backwardRight:
+                this.cellP[r1-1][c1+1] = CellProperty.empty;
                 break;
         }
 
-        this.blackPiece--;
-        this.placeAMove(r1,c1,r2,c2);
-    }
-    public void Display(){
-        this.hLine();
-        this.columnIndex();
 
-        for (int i = rows -1; i >=0; i--){
-            this.rowIndex(i);
-            this.vLine();
-            for(int j = 0;j < columns; j++){
-                System.out.println(this.PieceAppearance(i,j));
-            }
-            this.rowIndex(i);
-            this.hLine();
+        this.blackPieces--;
+
+
+        this.placeAMove(r1, c1, r2, c2);
+
+    }
+
+
+    public void blackPieceLogic(int r1, int c1, int r2, int c2)
+    {
+
+        assert(Math.abs(r2-r1)==2 && Math.abs(c2-c1)==2);
+
+
+        MoveDir dir = r2<r1?(c2<c1?MoveDir.forwardRight:MoveDir.forwardLeft)
+                :(c2<c1?MoveDir.backwardRight:MoveDir.backwardLeft);
+
+
+        switch(dir){
+            case forwardLeft:
+                this.cellP[r1-1][c1+1] = CellProperty.empty;
+                break;
+            case forwardRight:
+                this.cellP[r1-1][c1-1] = CellProperty.empty;
+                break;
+            case backwardLeft:
+                this.cellP[r1+1][c1+1] = CellProperty.empty;
+                break;
+            case backwardRight:
+                this.cellP[r1+1][c1-1] = CellProperty.empty;
+                break;
         }
-        this.columnIndex();
+
+
+        this.whitePieces--;
+
+
+        this.placeAMove(r1, c1, r2, c2);
 
     }
-    public void columnIndex(){
-        System.out.println("   ");
-        for(int c = 0; c<columns;c++){
-            System.out.println(" " + c + " ");
+
+
+    public void validMovesW(Move move){
+        int r1 = move.initialRow;
+        int c1 = move.initialCol;
+        int r2 = move.finalRow;
+        int c2 = move.finalCol;
+
+        if((Math.abs(r2-r1)==2 && Math.abs(c2-c1)==2)){
+            whitePieceLogic(r1, c1, r2, c2);
+
+        }else{
+            placeAMove(r1, c1, r2, c2);
+        }
+    }
+
+    public void validMovesB(Move move){
+        int r1 = move.initialRow;
+        int c1 = move.initialCol;
+        int r2 = move.finalRow;
+        int c2 = move.finalCol;
+
+        if(Math.abs(r2-r1)==2 && Math.abs(c2-c1)==2){
+            blackPieceLogic(r1, c1, r2, c2);
+
+        }else{
+            placeAMove(r1, c1, r2, c2);
+        }
+
+    }
+
+    public void Display()
+    {
+        this.columIndex();
+        this.DrawHorizontalLine();
+
+        for(int i = row-1; i >=0; i--)
+        {
+            this.rowIndex(i);
+            this.DrawVerticalLine();
+
+            for(int j = 0; j< column; j++)
+            {
+                System.out.print(this.pieceAppearance(i,j));
+                this.DrawVerticalLine();
+            }
+
+            this.rowIndex(i);
+            System.out.println();
+            this.DrawHorizontalLine();
+        }
+
+        this.columIndex();
+        System.out.println();
+    }
+
+    private String pieceAppearance(int i, int j) {
+        assert(i>0 && i<row && j>0 && j< column);
+        String str = new String();
+
+        if(this.cellP[i][j] == CellProperty.invalid){
+            str = "     ";
+        }
+        else if(this.cellP[i][j] == CellProperty.empty){
+            str = "  _  ";
+        }
+        else if(this.cellP[i][j] == CellProperty.white){
+            str = "  W  ";
+        }
+        else if(this.cellP[i][j] == CellProperty.black){
+            str = "  B  ";
+        }
+        else if(this.cellP[i][j] == CellProperty.whitek){
+            str = "  W+ ";
+        }
+        else if(this.cellP[i][j] == CellProperty.blackk){
+            str = "  B+ ";
+        }
+
+        return str;
+    }
+
+    private void columIndex() {
+        System.out.print("   ");
+        for(int c = 0; c<column; c++){
+            System.out.print("   " + c + "  " );
         }
         System.out.println();
     }
-    public void rowIndex(int i){
+
+    private void rowIndex(int i) {
         System.out.print(" " + i + " ");
     }
-    private String PieceAppearance(int i,int j){
-        assert(i>0 && i < rows && j > 0 && j < columns);
-        String string = new String();
 
-        if(this.cellP[i][j] == CellProperty.invalid){
-            string = "     ";
-        } else if(this.cellP[i][j] == CellProperty.empty){
-            string = "  -  ";
 
-        }else if(this.cellP[i][j] == CellProperty.white){
-            string = "  W  ";
-        }else if(this.cellP[i][j] == CellProperty.whiteK){
-            string = "  wK  ";
-        }else if(this.cellP[i][j] == CellProperty.black){
-            string = "  B  ";
-        }else if(this.cellP[i][j] == CellProperty.blackK){
-            string = "  bK  ";
+    public Board duplicate(){
+        Board newBoard = new Board(this.cellP);
+        newBoard.blackPieces = this.blackPieces;
+        newBoard.whitePieces = this.whitePieces;
+
+        return newBoard;
+    }
+
+
+    public boolean isGameFinished() {
+        return (this.blackPieces==0 || this.whitePieces == 0)?true:false;
+    }
+
+
+    public boolean isGameDraw(Color color){
+
+        Vector<Vector<Move>> possibleMoveSeq = AlphaBeta.getMoves(this.duplicate(), color);
+
+        if(possibleMoveSeq.isEmpty()){
+            return true;
+
+        }else{
+            return false;
         }
-        return string;
-    }}
+    }
 
+    public boolean isWhiteWinner(){
+        boolean res = false;
+        if(this.blackPieces == 0){
+            res = true;
+        }
+        return res;
+    }
 
-
+    public boolean isBlackWinner(){
+        boolean res = false;
+        if(this.whitePieces == 0){
+            res = true;
+        }
+        return res;
+    }
+}
