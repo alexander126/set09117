@@ -18,31 +18,25 @@ public class BlackNavi {
 
         assert(board.cellP[r][c] == CellProperty.black || board.cellP[r][c] == CellProperty.blackk);
 
-        if( r>=1 && c<Board.column-1 &&
-                board.cellP[r-1][c+1] == CellProperty.empty
-
-                )
+        if(r>=1 && c<Board.column-1 &&
+           board.cellP[r-1][c+1] == CellProperty.empty)
         {
             forwardLeft = new Move(r,c,r-1, c+1);
         }
         return forwardLeft;
     }
 
-    // Forward Left Capture for Black
+
     public static Move blackCaptFL(int r, int c, Board board)
     {
         Move forwardLeftCapture = null;
 
         if(r>=2 && c<Board.column-2 &&
-                (
-                        board.cellP[r-1][c+1].equals(CellProperty.white)
-                                || board.cellP[r-1][c+1].equals(CellProperty.whitek)
-                )
-                && board.cellP[r-2][c+2].equals(CellProperty.empty)
-                )
+          (board.cellP[r-1][c+1].equals(CellProperty.white) ||
+          board.cellP[r-1][c+1].equals(CellProperty.whitek)) &&
+          board.cellP[r-2][c+2].equals(CellProperty.empty))
         {
             forwardLeftCapture = new Move(r,c,r-2,c+2);
-            //System.out.println("Forward Left Capture for Black");
         }
 
         return forwardLeftCapture;
@@ -50,44 +44,36 @@ public class BlackNavi {
 
 
 
-    //Forward Right for Black
+
     public static Move blackMoveFR(int r, int c, Board board){
         Move forwardRight = null;
-        if( r>=1 && c>=1 &&
-                board.cellP[r-1][c-1] == CellProperty.empty
-                )
+        if(r>=1 && c>=1 &&
+          board.cellP[r-1][c-1] == CellProperty.empty)
         {
             forwardRight = new Move(r,c, r-1, c-1);
         }
         return forwardRight;
     }
 
-    // Forward Right Capture for White
+
     public static Move blackCaptFR(int r, int c, Board board){
 
         Move forwardRightCapture = null;
-
-        if(r>=2 && c>=2 && (
-                board.cellP[r-1][c-1].equals(CellProperty.white)
-                        || board.cellP[r-1][c-1].equals(CellProperty.whitek)
-        )
-                && board.cellP[r-2][c-2].equals(CellProperty.empty)
-                )
+        if(r>=2 && c>=2 &&
+          (board.cellP[r-1][c-1].equals(CellProperty.white) ||
+          board.cellP[r-1][c-1].equals(CellProperty.whitek)) &&
+          board.cellP[r-2][c-2].equals(CellProperty.empty))
         {
             forwardRightCapture = new Move(r,c,r-2,c-2);
-            //System.out.println("Forward Right Capture for Black");
         }
-
         return forwardRightCapture;
     }
 
     public static Move blackMoveBL(int r, int c, Board board){
         Move backwardLeft = null;
-
         assert(board.cellP[r][c].equals(CellProperty.blackk));
         if(r<Board.row-1 && c<Board.column-1 &&
-                board.cellP[r+1][c+1] == CellProperty.empty
-                )
+          board.cellP[r+1][c+1] == CellProperty.empty)
         {
             backwardLeft = new Move(r,c, r+1, c+1);
         }
@@ -95,34 +81,28 @@ public class BlackNavi {
         return backwardLeft;
     }
 
-    // Backward Left Capture for Black
+
     public static Move blackCaptBL(int r, int c, Board board){
 
         Move backwardLeftCapture = null;
-
-        if(r<Board.row-2 && c<Board.column-2 && (
-                board.cellP[r+1][c+1].equals(CellProperty.white)
-                        || board.cellP[r+1][c+1].equals(CellProperty.whitek)
-        )
-                && board.cellP[r+2][c+2].equals(CellProperty.empty)
-                )
+        if(r<Board.row-2 && c<Board.column-2 &&
+          (board.cellP[r+1][c+1].equals(CellProperty.white) ||
+          board.cellP[r+1][c+1].equals(CellProperty.whitek)) &&
+          board.cellP[r+2][c+2].equals(CellProperty.empty))
         {
             backwardLeftCapture = new Move(r,c,r+2,c+2);
-            //System.out.println("Backward Left Capture for Black");
         }
-
         return backwardLeftCapture;
     }
 
 
     public static Move blackMoveBR(int r, int c, Board board){
-        Move backwardRight = null;
 
+        Move backwardRight = null;
         assert(board.cellP[r][c].equals(CellProperty.blackk));
 
         if(r<Board.row-1 && c>=1 &&
-                board.cellP[r+1][c-1].equals(CellProperty.empty)
-                )
+           board.cellP[r+1][c-1].equals(CellProperty.empty))
         {
             backwardRight = new Move(r,c, r+1, c-1);
         }
@@ -130,20 +110,17 @@ public class BlackNavi {
     }
 
 
-    // Backward Right Capture for Black
+
     public static Move blackCaptBR(int r, int c, Board board){
 
         Move backwardRightCapture = null;
 
-        if(r<Board.row-2 && c>=2 && (
-                board.cellP[r+1][c-1].equals(CellProperty.white) ||
-                        board.cellP[r+1][c-1].equals(CellProperty.whitek)
-        )
-                && board.cellP[r+2][c-2].equals(CellProperty.empty)
-                )
+        if(r<Board.row-2 && c>=2 &&
+          (board.cellP[r+1][c-1].equals(CellProperty.white) ||
+          board.cellP[r+1][c-1].equals(CellProperty.whitek)) &&
+          board.cellP[r+2][c-2].equals(CellProperty.empty))
         {
             backwardRightCapture = new Move(r,c,r+2,c-2);
-            //System.out.println("Backward Right Capture for Black");
         }
 
         return backwardRightCapture;

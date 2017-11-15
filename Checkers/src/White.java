@@ -22,9 +22,9 @@ public class White extends WhiteNavi
 
     public static void Move()
     {
-        Input.PrintSeparator('-');
-        System.out.println("\t\tWHITE's TURN");
-        Input.PrintSeparator('-');
+        Input.gLines('-');
+        System.out.println("\t\tWhite Player Move");
+        Input.gLines('-');
 
         if (player.equals(Player.HUMAN)){
 
@@ -76,17 +76,12 @@ public class White extends WhiteNavi
             {
                 assert(!board.cellP[r][c].equals(CellProperty.invalid));
 
-                if(
-                        board.cellP[r][c].equals(CellProperty.white) ||
-                                board.cellP[r][c].equals(CellProperty.whitek)
-                        )
+                if(board.cellP[r][c].equals(CellProperty.white) || board.cellP[r][c].equals(CellProperty.whitek))
                 {
                     if (r<Board.row-2)
                     {
-
                         if (whiteCaptFL(r,c, board)!=null)
                             jumpMoves.add(whiteCaptFL(r,c, board));
-
 
                         if (whiteCaptFR(r,c, board)!=null)
                             jumpMoves.add(whiteCaptFR(r,c, board));
@@ -97,10 +92,8 @@ public class White extends WhiteNavi
                 {
                     if (r>=2)
                     {
-
                         if (whiteCaptBL(r,c,board)!=null)
                             jumpMoves.add(whiteCaptBL(r,c, board));
-
 
                         if (whiteCaptBR(r,c,board)!=null)
                             jumpMoves.add(whiteCaptBR(r,c,board));
@@ -113,22 +106,19 @@ public class White extends WhiteNavi
     }
 
 
-    public static Vector<Move> whiteNonJumpMoves(Board board){
-
+    public static Vector<Move> whiteNonJumpMoves(Board board)
+    {
         Vector<Move> normalMoves = new Vector<Move>();
-
 
         for(int r = 0; r<Board.row; r++)
         {
-
             int c = (r%2==0)?0:1;
             for(; c<Board.column; c+=2)
             {
                 assert(!board.cellP[r][c].equals(CellProperty.invalid));
 
-
-                if( board.cellP[r][c].equals(CellProperty.white) ){
-
+                if( board.cellP[r][c].equals(CellProperty.white))
+                {
                     Move move = null;
                     move = whiteCaptFL(r, c, board);
                     assert(move == null);
@@ -136,16 +126,17 @@ public class White extends WhiteNavi
                     assert(move == null);
 
                     move = whiteMoveFL(r, c, board);
-                    if(move!=null){
+                    if(move!=null)
+                    {
                         normalMoves.add(move);
                     }
 
                     move = whiteMoveFR(r, c, board);
-                    if(move!=null){
+                    if(move!=null)
+                    {
                         normalMoves.add(move);
                     }
                 }
-
 
                 if(board.cellP[r][c] == CellProperty.whitek){
                     Move move = null;
@@ -160,22 +151,26 @@ public class White extends WhiteNavi
                     assert(move == null);
 
                     move = whiteMoveFL(r, c, board);
-                    if(move!=null){
+                    if(move!=null)
+                    {
                         normalMoves.add(move);
                     }
 
                     move = whiteMoveFR(r, c, board);
-                    if(move!=null){
+                    if(move!=null)
+                    {
                         normalMoves.add(move);
                     }
 
                     move = whiteMoveBL(r, c, board);
-                    if(move!=null){
+                    if(move!=null)
+                    {
                         normalMoves.add(move);
                     }
 
                     move = whiteMoveBR(r, c, board);
-                    if(move!=null){
+                    if(move!=null)
+                    {
                         normalMoves.add(move);
                     }
 

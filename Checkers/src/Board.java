@@ -162,22 +162,22 @@ public class Board extends Graphics {
     public void Display()
     {
         this.columIndex();
-        this.DrawHorizontalLine();
+        this.hLine();
 
         for(int i = row-1; i >=0; i--)
         {
             this.rowIndex(i);
-            this.DrawVerticalLine();
+            this.vLine();
 
             for(int j = 0; j< column; j++)
             {
                 System.out.print(this.pieceAppearance(i,j));
-                this.DrawVerticalLine();
+                this.vLine();
             }
 
             this.rowIndex(i);
             System.out.println();
-            this.DrawHorizontalLine();
+            this.hLine();
         }
 
         this.columIndex();
@@ -201,10 +201,10 @@ public class Board extends Graphics {
             str = "  B  ";
         }
         else if(this.cellP[i][j] == CellProperty.whitek){
-            str = "  W+ ";
+            str = "  Kw ";
         }
         else if(this.cellP[i][j] == CellProperty.blackk){
-            str = "  B+ ";
+            str = "  Kb ";
         }
 
         return str;

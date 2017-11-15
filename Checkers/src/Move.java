@@ -13,7 +13,6 @@
  *
  * */
 import java.util.List;
-import java.util.Vector;
 
 public class Move {
     int initialRow;
@@ -37,7 +36,7 @@ public class Move {
                 && this.finalCol == move.finalCol)?true:false;
     }
 
-    public boolean ExistsInVector(List<Move> moves)
+    public boolean isMoveExisting (List<Move> moves)
     {
         for (int i = 0; i<moves.size(); i++)
         {

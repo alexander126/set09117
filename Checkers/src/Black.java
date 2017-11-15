@@ -22,9 +22,9 @@ public class Black extends BlackNavi {
 
     public static void Move(){
 
-        Input.PrintSeparator('-');
-        System.out.println("\t\tBLACK's TURN");
-        Input.PrintSeparator('-');
+        Input.gLines('-');
+        System.out.println("\t\tBlack player move");
+        Input.gLines('-');
 
         if (player.equals(Player.HUMAN)){
 

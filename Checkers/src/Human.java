@@ -12,7 +12,6 @@
  *
  * */
 import java.util.List;
-import java.util.Vector;
 
 public class Human {
 
@@ -25,6 +24,11 @@ public class Human {
                     move.finalRow, move.finalCol))
             {
                 incorrectOption = false;
+                Input.gLines('-');
+                System.out.print("Player's move was ");
+                System.out.print("("+move.initialRow+","+move.initialCol+") -->"+" ("+move.finalRow+", "+move.finalCol+")");
+                System.out.println("");
+                Input.gLines('-');
             }
         }
 
@@ -40,6 +44,11 @@ public class Human {
                     move.finalRow, move.finalCol))
             {
                 incorrectOption = false;
+                Input.gLines('-');
+                System.out.print("Player's move was");
+                System.out.print("("+move.initialRow+","+move.initialCol+") -->"+" ("+move.finalRow+", "+move.finalCol+")");
+                System.out.println("");
+                Input.gLines('-');
             }
         }
 
@@ -48,67 +57,55 @@ public class Human {
 
     private static boolean isWMoveValid(int r1, int c1, int r2, int c2)
     {
-        // Select Right Piece and Right Move
         if (Game.board.cellP[r1][c1].equals(CellProperty.invalid) || 
             !(Game.board.cellP[r1][c1].equals(CellProperty.white) || 
             Game.board.cellP[r1][c1].equals(CellProperty.whitek)) || 
             !Game.board.cellP[r2][c2].equals(CellProperty.empty))
         {
-            Input.PrintSeparator('-');
-            System.out.println("Check !!! Black/Invalid Piece Selected or Invalid Move..... Try Again.");
-            Input.PrintSeparator('-');
+            Input.gLines('-');
+            System.out.println("Invalid Piece or Move, Please try again");
+            Input.gLines('-');
             return false;
         }
 
-        // Caution: Calculate forced moves at (r1,c1)-------------------------------------------
         List<Move> forcedJumps = White.whiteJumps(r1,c1,Game.board);
 
-        // If Forced Move exists at (r1, c1)
         if (!forcedJumps.isEmpty())
         {
             Move move = new Move(r1,c1,r2,c2);
 
-            // Caution: if the current move is a forced move -------------------------------------------
-            if (move.ExistsInVector(forcedJumps))
+            if (move.isMoveExisting(forcedJumps))
             {
-                // Check if  further capture is possible
                 while (true)
                 {
-                    // Capture Black Piece
                     Game.board.whitePieceLogic(r1,c1,r2,c2);
 
-                    // Update r1 to r2 and c1 to c2
                     r1 = r2;
                     c1 = c2;
 
-                    // Calculate further capture at (r1,c1)
                     List<Move> furtherCapture = White.whiteJumps(r1, c1, Game.board);
 
-                    // No further capture
                     if (furtherCapture.isEmpty()) {
                         break;
                     }
 
-                    // Caution: Further capture exists ----> Make sure owner gives correct input
                     boolean incorrectOption = true;
                     while (incorrectOption)
                     {
-                        Input.PrintSeparator('-');
-                        System.out.println("Further capture exists!!!!!");
-                        System.out.println("You have the following moves at: (r1: " + r1 + ", c1: " + c1 + ")");
-                        for (int i=0; i<furtherCapture.size();i++){
-                            System.out.print("Option "+(i+1)+" : ");
+                        Input.gLines('-');
+                        System.out.println("Mantadory jump available");
+                        System.out.println("Your options are : (r1: " + r1 + ", c1: " + c1 + ")");
+                        for (int i=0; i<furtherCapture.size();i++)
+                        {
+                           System.out.print("Option "+(i+1)+" : ");
                            System.out.print("------>(r2: " + furtherCapture.get(i).finalRow+", ");
-                            System.out.println("c2: " + furtherCapture.get(i).finalCol+")");
+                           System.out.println("c2: " + furtherCapture.get(i).finalCol+")");
                         }
-                        Input.PrintSeparator('-');
+                        Input.gLines('-');
 
-                        // Take input from owner
-                        Move furtherMove = Input.TakeUserInput(r1,c1);
+                        Move furtherMove = Input.getFollowingInput(r1,c1);
 
-                        // Caution: Valid owner input -----------------------------------------------------
-                        if (furtherMove.ExistsInVector(furtherCapture)) {
-                            // Update r2 and c2 and set the incorrect flag to be false
+                        if (furtherMove.isMoveExisting(furtherCapture)) {
                             r2 = furtherMove.finalRow;
                             c2 = furtherMove.finalCol;
                             incorrectOption = false;
@@ -120,36 +117,32 @@ public class Human {
             }
             else
             {
-                Input.PrintSeparator('-');
-                System.out.println("Check!!!Wrong Move....Try Again.");
-                System.out.println("You have the following moves at: (r1: " + r1 + ", c1: " + c1 + ")");
-                for (int i=0; i<forcedJumps.size();i++){
-                    System.out.print("Option "+(i+1)+" : ");
-                    System.out.print("------>(r2: " + forcedJumps.get(i).finalRow+", ");
+                Input.gLines('-');
+                System.out.println("Wrong Move");
+                System.out.println("Your options are: (r1: " + r1 + ", c1: " + c1 + ")");
+                for (int i=0; i<forcedJumps.size();i++)
+                {
+                   System.out.print("Option "+(i+1)+" : ");
+                   System.out.print("------>(r2: " + forcedJumps.get(i).finalRow+", ");
                    System.out.println("c2: " + forcedJumps.get(i).finalCol+")");
                 }
 
-                Input.PrintSeparator('-');
+                Input.gLines('-');
                 return false;
             }
         }
 
-        // If no forced move exists at (r1,c1)
         if (forcedJumps.isEmpty())
         {
-            // Caution: Calculate all forced moves for white at this state of the board-------------------
             List<Move> forcedMoves = White.whitePossibleJumps(Game.board);
 
-            // No forced move exists at this state of the board for white
             if (forcedMoves.isEmpty())
             {
-                // Forward Move
-                if (r2 - r1 == 1 && Math.abs(c2 - c1) == 1) {
+               if (r2 - r1 == 1 && Math.abs(c2 - c1) == 1) {
                     Game.board.placeAMove(r1, c1, r2, c2);
                     return true;
                 }
 
-                // Backward Move For WhiteKing
                 else if (Game.board.cellP[r1][c1].equals(CellProperty.whitek)) {
                     if (r2 - r1 == -1 && Math.abs(c2 - c1) == 1) {
                         Game.board.placeAMove(r1, c1, r2, c2);
@@ -158,18 +151,18 @@ public class Human {
                 }
 
                 else{
-                    Input.PrintSeparator('-');
-                    System.out.println("Check!!!Only Unit Step Move Allowed.......Try Again.\n");
-                    Input.PrintSeparator('-');
+                    Input.gLines('-');
+                    System.out.println("Impossible move!!\n");
+                    Input.gLines('-');
                     return false;
                 }
             }
             else
             {
-                Input.PrintSeparator('-');
+                Input.gLines('-');
 
-                System.out.println("Forced Move exists!!!!!!!!!!!");
-                System.out.println("You have the following options.");
+                System.out.println("Mantadory jump available!");
+                System.out.println("Your options are");
                 for (int i=0; i<forcedMoves.size();i++)
                 {
                     System.out.print((i+1) + ". ");
@@ -179,7 +172,7 @@ public class Human {
                     System.out.println("c2: " + forcedMoves.get(i).finalCol+")");
                 }
 
-                Input.PrintSeparator('-');
+                Input.gLines('-');
                 return false;
             }
         }
@@ -192,67 +185,58 @@ public class Human {
 
     private static boolean isBMoveValid(int r1, int c1, int r2, int c2)
     {
-        // Select Right Piece and Right Move
         if (Game.board.cellP[r1][c1].equals(CellProperty.invalid) ||
            !(Game.board.cellP[r1][c1].equals(CellProperty.black) ||
            Game.board.cellP[r1][c1].equals(CellProperty.blackk)) ||
            !Game.board.cellP[r2][c2].equals(CellProperty.empty))
                 {
-                    Input.PrintSeparator('-');
-                    System.out.println("Check !!! White/Invalid Piece Selected or Invalid Move..... Try Again.");
-                    Input.PrintSeparator('-');
+                    Input.gLines('-');
+                    System.out.println("Invalid Piece or Move, Please try agaim");
+                    Input.gLines('-');
                     return false;
                 }
 
-        // Caution: Calculate forced moves at (r1,c1)-------------------------------------------
         List<Move> forcedJumps = Black.blackJumps(r1,c1,Game.board);
 
-        // If Forced Move exists at (r1, c1)
         if (!forcedJumps.isEmpty())
         {
             Move move = new Move(r1,c1,r2,c2);
-            // Caution: if the current move is a forced move -------------------------------------------
-            if (move.ExistsInVector(forcedJumps))
+
+            if (move.isMoveExisting(forcedJumps))
             {
-                // Check if  further capture is possible
                 while (true)
                 {
-                    // Capture White Piece
                     Game.board.blackPieceLogic(r1,c1,r2,c2);
 
-                    // Update r1 to r2 and c1 to c2
                     r1 = r2;
                     c1 = c2;
 
-                    // Calculate further capture at (r1,c1)
                     List<Move> furtherCapture = Black.blackJumps(r1, c1, Game.board);
 
-                    // Caution: No further capture--------------------------------------------
                     if (furtherCapture.isEmpty())
                     {
                         break;
                     }
 
-                    // Caution: Further capture exists ----> Make sure owner gives correct input
+
                     boolean incorrectOption = true;
                     while (incorrectOption)
                     {
-                        Input.PrintSeparator('-');
-                        System.out.println("Further capture exists!!!!!");
-                        System.out.println("You have the following moves at: (r1: " + r1 + ", c1: " + c1 + ")");
-                        for (int i=0; i<furtherCapture.size();i++){
-                            System.out.print("Option "+(i+1)+" : ");
-                            System.out.print("------>(r2: " + furtherCapture.get(i).finalRow+", ");
-                            System.out.println("c2: " + furtherCapture.get(i).finalCol+")");
+                        Input.gLines('-');
+                        System.out.println("Mantadory jumps available");
+                        System.out.println("Your options are: (r1: " + r1 + ", c1: " + c1 + ")");
+                        for (int i=0; i<furtherCapture.size();i++)
+                        {
+                           System.out.print("Option "+(i+1)+" : ");
+                           System.out.print("------>(r2: " + furtherCapture.get(i).finalRow+", ");
+                           System.out.println("c2: " + furtherCapture.get(i).finalCol+")");
                         }
-                        Input.PrintSeparator('-');
+                        Input.gLines('-');
 
-                        // Take input from owner
-                        Move furtherMove = Input.TakeUserInput(r1,c1);
+                        Move furtherMove = Input.getFollowingInput(r1,c1);
 
-                        // Caution: Valid owner input -----------------------------------------------------
-                        if (furtherMove.ExistsInVector(furtherCapture)) {
-                            // Update r2 and c2 and set the incorrect flag to be false
+
+                        if (furtherMove.isMoveExisting(furtherCapture)) {
                             r2 = furtherMove.finalRow;
                             c2 = furtherMove.finalCol;
                             incorrectOption = false;
@@ -264,38 +248,33 @@ public class Human {
             }
             else
             {
-                Input.PrintSeparator('-');
+                Input.gLines('-');
 
-                System.out.println("Forced Move exists!!!!!!!!!!!");
-                System.out.println("You have the following moves at: (r1: " + r1 + ", c1: " + c1 + ")");
+                System.out.println("Mantadory jumps available");
+                System.out.println("Your options are: (r1: " + r1 + ", c1: " + c1 + ")");
                 for (int i=0; i<forcedJumps.size();i++)
                 {
-                    System.out.print("Option "+(i+1)+" : ");
-                    System.out.print("------>(r2: " + forcedJumps.get(i).finalRow+", ");
-                    System.out.println("c2: " + forcedJumps.get(i).finalCol+")");
+                   System.out.print("Option "+(i+1)+" : ");
+                   System.out.print("------>(r2: " + forcedJumps.get(i).finalRow+", ");
+                   System.out.println("c2: " + forcedJumps.get(i).finalCol+")");
                 }
 
-                Input.PrintSeparator('-');
+                Input.gLines('-');
                 return false;
             }
         }
 
-        // If no forced move exists at (r1,c1)
         if (forcedJumps.isEmpty())
         {
-            // Caution: Calculate all forced moves for black at this state of the board-------------------
             List<Move> forcedMoves = Black.blackPossibleJumps(Game.board);
 
-            // No forced move exists at this state of the board for black
             if (forcedMoves.isEmpty())
             {
-                // Forward Move for Black
                 if (r2 - r1 == -1 && Math.abs(c2 - c1) == 1) {
                     Game.board.placeAMove(r1, c1, r2, c2);
                     return true;
                 }
 
-                // Backward Move For BlackKing
                 else if (Game.board.cellP[r1][c1].equals(CellProperty.blackk)) {
                     if (r2 - r1 == 1 && Math.abs(c2 - c1) == 1) {
                         Game.board.placeAMove(r1, c1, r2, c2);
@@ -304,17 +283,17 @@ public class Human {
                 }
 
                 else{
-                    Input.PrintSeparator('-');
-                    System.out.println("Check!!!Only Unit Step Move Allowed.......Try Again.");
-                    Input.PrintSeparator('-');
+                    Input.gLines('-');
+                    System.out.println("Impossible Move!!");
+                    Input.gLines('-');
                     return false;
                 }
             }
             else
             {
-                Input.PrintSeparator('-');
-                System.out.println("Forced Move exists!!!!!!!!!!!");
-                System.out.println("You have the following options.");
+                Input.gLines('-');
+                System.out.println("Mantadory jump available!");
+                System.out.println("Your options are");
                 for (int i=0; i<forcedMoves.size();i++){
                     System.out.print((i+1) + ". ");
                     System.out.print("(r1: " + forcedMoves.get(i).initialRow + ", ");
@@ -323,7 +302,7 @@ public class Human {
                     System.out.println("c2: " + forcedMoves.get(i).finalCol+")");
                 }
 
-                Input.PrintSeparator('-');
+                Input.gLines('-');
                 return false;
             }
         }

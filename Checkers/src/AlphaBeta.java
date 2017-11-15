@@ -28,12 +28,12 @@ public class AlphaBeta {
 
         alphaBeta(Game.board, Color.white, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, moveSeq);
 
-        //Apply the move to the game board.
-        for(Move m:moveSeq){
+        for(Move m:moveSeq)
+        {
             Game.board.validMovesW(m);
         }
 
-        System.out.print("Robot's Move was ");
+        System.out.print("Andy the Ape's Move was ");
         Input.DisplayMoveSeq(moveSeq);
         System.out.println();
     }
@@ -45,29 +45,18 @@ public class AlphaBeta {
 
         alphaBeta(Game.board, Color.black, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, moveSeq);
 
-        //Apply the move to the game board.
-        for(Move m:moveSeq){
+        for(Move m:moveSeq)
+        {
             Game.board.validMovesB(m);
         }
 
-        System.out.print("Robot's Move was ");
+        System.out.print("Andy the Ape's Move was ");
         Input.DisplayMoveSeq(moveSeq);
         System.out.println();
 
 
     }
 
-    /**
-     * White represents the maximizing player, he/she wants to maximize the value of the board.
-     * Black is the minimizing player, he/she wants to minimize the value of the board.
-     *
-     * alpha represents the maximum value that the max player is assured of, initially -inf.
-     * beta represents the minimum value that the min player is assured of, initially +inf.
-     *
-     * if(alpha>beta) break
-     *
-     *
-     */
     private static int alphaBeta(Board board, Color player, int depth, int alpha, int beta, Vector<Move> resultMoveSeq){
 
         if(!isDepthReached(board, player, depth)){
@@ -98,7 +87,6 @@ public class AlphaBeta {
                 }
             }
 
-            //If the depth is 0, copy the bestMoveSeq in the result move seq.
             if(depth == 0 && bestMoveSeq!=null){
                 resultMoveSeq.addAll(bestMoveSeq);
             }
@@ -122,7 +110,7 @@ public class AlphaBeta {
                     break;
                 }
             }
-            //If the depth is 0, copy the bestMoveSeq in the result move seq.
+
             if(depth == 0 && bestMoveSeq!=null){
                 resultMoveSeq.addAll(bestMoveSeq);
             }
@@ -276,7 +264,6 @@ public class AlphaBeta {
                 }
             }
             boardD.add(boardCopy);
-            //System.out.println();
         }
 
         return boardD;
